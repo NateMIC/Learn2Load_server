@@ -5,11 +5,11 @@ using System.Threading.Tasks;
 
 namespace RealTimeCharts_Server.HubConfig
 {
-    public class ChartHub : Hub
+    public class HoloHub : Hub
     {
-        public async Task BroadcastChartData(string data)
+        public async Task BroadcastHoloData(string data)
         {
-            await Clients.All.SendAsync("broadcastchartdata", data);
+            await Clients.All.SendAsync("broadcastholodata", data);
             Debug.WriteLine(data);
         }
     }

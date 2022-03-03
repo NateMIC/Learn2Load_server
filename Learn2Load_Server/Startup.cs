@@ -57,8 +57,8 @@ namespace RealTimeCharts_Server
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllers();
-                endpoints.MapHub<ChartHub>("/chart");
+                //endpoints.MapControllers();
+                endpoints.MapHub<HoloHub>("/holo");
             });
         }
     }
