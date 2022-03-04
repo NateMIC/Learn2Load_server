@@ -28,7 +28,7 @@ namespace RealTimeCharts_Server
         {
             services.AddCors(options => 
             { 
-                options.AddPolicy("CorsPolicy", builder => builder.WithOrigins("https://learn2loadweb.azurewebsites.net")
+                options.AddPolicy("CorsPolicy", builder => builder.WithOrigins("https://blue-glacier-01b9e0003.1.azurestaticapps.net")
                 .AllowAnyMethod()
                 .AllowAnyHeader()
                 .AllowCredentials()); 
@@ -57,7 +57,6 @@ namespace RealTimeCharts_Server
 
             app.UseEndpoints(endpoints =>
             {
-                //endpoints.MapControllers();
                 endpoints.MapHub<HoloHub>("/holo");
             });
         }
