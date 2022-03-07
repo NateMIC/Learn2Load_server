@@ -10,9 +10,7 @@ namespace RealTimeCharts_Server.HubConfig
 {
     public class HoloHub : Hub
     {
-        public static string connectionIdHololens;
-        public static string connectionIdAngular;
-        public static ConcurrentDictionary<string, string> MyUsers = new ConcurrentDictionary<string, string>();
+        public static ConcurrentDictionary<string, string> MyClients = new ConcurrentDictionary<string, string>();
 
         public class JsonToSend
         {
@@ -24,27 +22,33 @@ namespace RealTimeCharts_Server.HubConfig
 
         }
 
+        public override Task OnDisconnectedAsync(Exception exception)
+        {
+            string idToRemove = Context.ConnectionId;
+            var itemsToRemove = MyClients.Where(kvp => kvp.Value.Equals(idToRemove));
+
+            foreach (var item in itemsToRemove)
+                MyClients.TryRemove(item.Key, out idToRemove);
+
+            return base.OnDisconnectedAsync(exception);
+        }
+
 
         public async Task BroadcastHoloData(string data, string connectionId)
         {
-            JsonToSend test = JsonSerializer.Deserialize<JsonToSend>(data);
-            if (test.source == "hololens" && test.destination == null)
+            JsonToSend dataAsObject = JsonSerializer.Deserialize<JsonToSend>(data);
+
+            if (dataAsObject.destination == null)
             {
-                MyUsers.TryAdd("connectionIdHololens", connectionId);
-                Console.WriteLine("hololens : " + connectionId);
+                MyClients.TryAdd(dataAsObject.source, connectionId);
             }
-            else if (test.source == "angular" && test.destination == null)
+            else if (dataAsObject.destination.ToLower().Contains("angular"))
             {
-                MyUsers.TryAdd("connectionIdAngular", connectionId);
-                Console.WriteLine("angular : " + connectionId);
-            }
-            else if (test.destination.ToLower().Contains("angular"))
-            {
-                await Clients.Client(MyUsers.FirstOrDefault(kvp => kvp.Key == "connectionIdAngular").Value).SendAsync("broadcastholodata", data);
+                await Clients.Client(MyClients.FirstOrDefault(kvp => dataAsObject.destination.ToLower().Contains(kvp.Key)).Value).SendAsync("broadcastholodata", data);
             }
             else
             {
-                await Clients.Client(MyUsers.FirstOrDefault(kvp => kvp.Key == "connectionIdHololens").Value).SendAsync("broadcastholodata", data);
+                await Clients.Client(MyClients.FirstOrDefault(kvp => kvp.Key == dataAsObject.destination).Value).SendAsync("broadcastholodata", data);
             }
         }
 
