@@ -10,8 +10,6 @@ namespace RealTimeCharts_Server.HubConfig
 {
     public class HoloHub : Hub
     {
-        //Dictionnary common to all the != thread
-        public static ConcurrentDictionary<string, string> MyClients = new ConcurrentDictionary<string, string>();
 
         //class of an object to be send as a JSON
         public class JsonToSend
@@ -24,40 +22,17 @@ namespace RealTimeCharts_Server.HubConfig
 
         }
 
-        //Method automaticaly triggered when a client is disconnected
-        public override Task OnDisconnectedAsync(Exception exception)
+
+        public async Task BroadcastHoloData(string data)
         {
-            string idToRemove = Context.ConnectionId;
-            var itemsToRemove = MyClients.Where(kvp => kvp.Value.Equals(idToRemove));
-
-            //Remove the entry from the dictionnary
-            foreach (var item in itemsToRemove)
-                MyClients.TryRemove(item.Key, out idToRemove);
-
-            return base.OnDisconnectedAsync(exception);
+            JsonToSend dataAsObject = JsonSerializer.Deserialize<JsonToSend>(data);
+            await Clients.All.SendAsync("broadcastholodata", data);
         }
 
-
-        public async Task BroadcastHoloData(string data, string connectionId)
+        public async Task BroadcastDataToAngular(string data)
         {
-
             JsonToSend dataAsObject = JsonSerializer.Deserialize<JsonToSend>(data);
-
-            //First connection of a client, used to record his connection id 
-            if (dataAsObject.destination == null)
-            {
-                MyClients.TryAdd(dataAsObject.source, connectionId);
-            }
-            //request FROM UNITY TO ANGULAR
-            else if (dataAsObject.destination.ToLower().Contains("angular"))
-            {
-                await Clients.Client(MyClients.FirstOrDefault(kvp => dataAsObject.destination.ToLower().Contains(kvp.Key)).Value).SendAsync("broadcastholodata", data);
-            }
-            //request FROM ANGULAR TO UNITY
-            else
-            {
-                await Clients.Client(MyClients.FirstOrDefault(kvp => kvp.Key == dataAsObject.destination).Value).SendAsync("broadcastholodata", data);
-            }
+            await Clients.Client(dataAsObject.destination).SendAsync("broadcastdatatoangular", data);
         }
 
         public string GetConnectionId()
