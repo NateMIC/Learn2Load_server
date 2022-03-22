@@ -16,6 +16,7 @@ namespace RealTimeCharts_Server.HubConfig
         {
             public string destination { get; set; }
             public string source { get; set; }
+            public string component { get; set; }
             public int success { get; set; }
             public int error { get; set; }
             public float time { get; set; }
