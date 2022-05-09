@@ -20,7 +20,9 @@ namespace RealTimeCharts_Server.HubConfig
 
         public async Task BroadcastHoloData(string data)
         {
+            //convert the string data to an object
             JsonToSend dataAsObject = JsonSerializer.Deserialize<JsonToSend>(data);
+            //Send the data to all clients connected to the hub
             await Clients.All.SendAsync("broadcastholodata", data);
         }
 
