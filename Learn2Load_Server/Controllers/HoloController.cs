@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
-using RealTimeCharts_Server.HubConfig;
+using Learn2LoadSignalR.HubConfig;
 
-namespace RealTimeCharts_Server.Controllers
+namespace Learn2LoadSignalR.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

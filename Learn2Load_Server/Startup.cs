@@ -1,18 +1,11 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using RealTimeCharts_Server.HubConfig;
+using Learn2LoadSignalR.HubConfig;
 
-namespace RealTimeCharts_Server
+namespace Learn2LoadSignalR
 {
     public class Startup
     {
@@ -28,7 +21,7 @@ namespace RealTimeCharts_Server
         {
             services.AddCors(options => 
             { 
-                options.AddPolicy("CorsPolicy", builder => builder.WithOrigins("https://mango-river-019348803.1.azurestaticapps.net/", "http://localhost:4200")
+                options.AddPolicy("CorsPolicy", builder => builder.WithOrigins("https://delightful-grass-051827f03.1.azurestaticapps.net", "http://localhost:4200")
                 .AllowAnyMethod()
                 .AllowAnyHeader()
                 .AllowCredentials()); 

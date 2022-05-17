@@ -1,12 +1,8 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.SignalR;
-using System;
-using System.Collections.Concurrent;
-using System.Linq;
+﻿using Microsoft.AspNetCore.SignalR;
 using System.Text.Json;
 using System.Threading.Tasks;
 
-namespace RealTimeCharts_Server.HubConfig
+namespace Learn2LoadSignalR.HubConfig
 {
     public class HoloHub : Hub
     {
@@ -20,8 +16,6 @@ namespace RealTimeCharts_Server.HubConfig
 
         public async Task BroadcastHoloData(string data)
         {
-            //convert the string data to an object
-            JsonToSend dataAsObject = JsonSerializer.Deserialize<JsonToSend>(data);
             //Send the data to all clients connected to the hub
             await Clients.All.SendAsync("broadcastholodata", data);
         }
